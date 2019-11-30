@@ -1,7 +1,10 @@
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.OptionalDataException;
 import java.util.List;
@@ -14,13 +17,13 @@ public class MainClass {
                 "webdriver.chrome.driver",
                 "C:/testing/chromedriver_win32/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
-        driver.get("https://google.com/");
+        driver.get("https://google.com/?hl=ru-BY");
         WebElement searchBox = driver.findElement(By.name("q"));
         searchBox.sendKeys("selenium");
         searchBox.submit();
         WebElement imagesUrl = driver.findElement(By.xpath("//a[contains(text(),'Картинки')] "));
         imagesUrl.click();
-        WebElement toolsButton = driver.findElement(By.xpath(".//*[text()='Инструменты']/.."));
+        WebElement toolsButton = driver.findElement(By.xpath("//a[contains(text(),'Инструменты')]"));
         toolsButton.click();
 
         List<WebElement> filters = driver.findElements(By.className("hdtb-mn-hd"));
@@ -32,6 +35,10 @@ public class MainClass {
 
         if (!filterByType.isPresent())
             throw new NoSuchElementException("Element is not found!");
+        System.out.println(filterByType.get());
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement element = wait.until(ExpectedConditions.elementToBeClickable(filterByType.get()));
 
         filterByType.get().click();
 
